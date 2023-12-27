@@ -1,0 +1,34 @@
+import  jwt  from "jsonwebtoken";
+import asyncHandler from 'express-async-handler';
+import User from '../models/userModel.js';
+export const handleRefreshToken = (req, res) => {
+
+   
+    const refreshToken = req.cookies.jwt;
+
+
+if(refreshToken){
+    try{
+        const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);  //verify edemezse catche düşer
+        const foundUser = User.findById(decoded.userId).select('-password')
+       // console.log(decoded.userId)
+        if (!foundUser) return res.sendStatus(403); //Forbidden 
+        const accessToken = jwt.sign(
+            { "userId": decoded.userId },
+            process.env.JWT_SECRET,
+            { expiresIn: '10m' }
+        );
+        res.json({ accessToken })
+    }catch(err){
+        console.log(err)
+        res.status(403);
+        throw new Error('Not authorized, token failed');
+    }
+}else {
+    res.status(401);
+    throw new Error('Not authorized, no token');
+  }
+
+  
+
+}

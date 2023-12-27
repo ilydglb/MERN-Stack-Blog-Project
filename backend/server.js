@@ -2,12 +2,15 @@ import express from 'express';
 import dotenv from 'dotenv';
 dotenv.config();
 import connectDB from './config/db.js';
+import helmet from 'helmet';
+import session from 'express-session';
+import cors from 'cors'
 
 
 const port = process.env.PORT || 8000;
 connectDB()
 const app = express();  //initialize express
-
+app.use(cors())
 // app.get('/', (req, res) => {
 //   res.send('Server is ready');
 // });
@@ -16,8 +19,20 @@ const app = express();  //initialize express
 //Request Body Parser Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+//app.use(helmet())
+
+// app.use(session({
+//     secret: 'your-secret-key',
+//     resave: false,
+//     saveUninitialized: false,
+//     cookie: { sameSite: 'strict' }
+//   }));
+
+//middleware for cookies
 import cookieParser from 'cookie-parser';
 app.use(cookieParser())
+
 import userRoutes from './routes/userRoutes.js';
 app.use('/api/users', userRoutes);
 

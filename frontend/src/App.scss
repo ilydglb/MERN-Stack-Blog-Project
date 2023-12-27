@@ -1,0 +1,158 @@
+* {
+  margin: 0;
+  padding: 0;
+  
+} 
+
+.app {
+  display: flex;  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+
+  background: linear-gradient(
+    rgba(255, 255, 255, 0.3),
+    rgba(255, 255, 255, 0.5)
+  ),
+  url("lightbg.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.formcontainer {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  flex-direction: column; //butonun alta geçmesi için
+
+  h1{
+    color: white;
+        text-align: center;
+        margin: 5%;
+        text-align: center;
+      
+      
+        //color: rgba(57, 180, 106, 0.25);
+  }
+  form{
+    background: transparent;
+    backdrop-filter: blur(50px);
+    box-shadow: 0 0 100px rgba(0, 0, 0, 0.5);
+
+    padding: 20px;
+    border-radius: 2%;
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 350px;
+    min-height: 450px;
+    align-items: center;
+  }
+
+  .btn{
+    width: 350px;
+    margin-top: 8%;
+  }
+  .login-btn{
+    width: 280px;
+    margin-top: 5%;
+  }
+  
+  .line{
+    color: white;
+    margin-top: 5%;
+    font-size: 18px;
+  }
+}
+
+
+.formInput{
+    display: flex;
+    flex-direction: column;
+    width: 280px;
+ 
+    
+    label{
+      font-size: 12px;
+      color: gray;
+    }
+    
+    span{
+      font-size: 12px;
+      padding: 3px;
+      margin-top: -8%;
+      color: red;
+      display: none;
+    }
+    input{
+      padding: 10px; 
+      border-radius: 5px;
+      border-style: none;
+      width: 100%;
+      margin-bottom: 8%;
+    }
+  input:invalid[focused="true"]{
+    border: 1px solid red;
+  }
+  
+  input:invalid[focused="true"] ~ span{
+    display: block;
+  }
+    
+
+  .icon{
+ 
+    margin-left: -10%;
+    margin-top: -63%;
+    color: grey;
+  } 
+}
+
+.custom{
+  .formInput{
+    input:invalid[focused="true"]{
+      border: none;
+    }  
+  }
+}
+
+.icon{  
+  font-size: 2.5em;
+  color: #789e9b; 
+  padding-right: 6%;
+}
+
+.route{color:rgb(120, 158, 155) ;
+font-weight: bold;}
+
+.navbar-container{
+  margin-left:-10% ;
+}
+
+.switch{
+  margin-right: 6%;
+}
+.dark{
+  
+.app
+  {background: linear-gradient(
+      rgba(0, 0, 0, 0.7),
+      rgba(255, 255, 255, 0)
+    ),
+    url("darkbackg.jpg");
+    background-size: cover;
+    background-position: center;
+    }
+
+    form{
+      box-shadow: 0 0 100px rgba(255, 255, 255, 0.1);
+    }
+    input{
+      background-color:  rgba(58, 27, 46,0.3);
+      color: white;
+    }
+    
+}
+
+
