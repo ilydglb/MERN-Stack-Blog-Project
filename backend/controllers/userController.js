@@ -13,6 +13,13 @@ import generateToken from '../utils/generateToken.js';
       throw new Error('User already exists');
     }
 
+    const userNameTaken = await User.findOne({ username });
+
+    if (userNameTaken) {
+      res.status(400)
+      throw new Error('Username is taken');
+    }
+
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(password,salt)
   
@@ -49,15 +56,19 @@ const authUser = asyncHandler(async (req, res) => {
   if (user && (await user.matchPassword(password))) {
    // generateToken(res, user._id);
 
- 
-    res.json({
+
+    res.status(200).json({
       _id: user._id,
       username: user.username,
       email: user.email,
       role:user.role,
-      accessToken: generateToken(res, user._id),
+      accessToken: generateToken(res, user._id)
     });
-    //console.log(res.data)
+
+    
+    // res.cookie('yourCookieName', 'cookieValue', { httpOnly: true });
+    // res.status(200).json({message:'Cookie sent!'});
+
   } else {
     res.status(401);
     throw new Error('Invalid email or password');

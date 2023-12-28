@@ -16,9 +16,9 @@ if(refreshToken){
         const accessToken = jwt.sign(
             { "userId": decoded.userId },
             process.env.JWT_SECRET,
-            { expiresIn: '10m' }
+            { expiresIn: '15m' }
         );
-        res.json({ accessToken })
+        res.status(200).json({ accessToken:accessToken, })
     }catch(err){
         console.log(err)
         res.status(403);
@@ -26,6 +26,7 @@ if(refreshToken){
     }
 }else {
     res.status(401);
+    console.log("COOKIE KAYIT ETMIYO")
     throw new Error('Not authorized, no token');
   }
 

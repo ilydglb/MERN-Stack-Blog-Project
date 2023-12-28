@@ -14,12 +14,15 @@ const generateToken = (res, userId) => {
       );
   
 
-  res.cookie('jwt', refreshToken, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV !== 'development', // Use secure cookies in production
-    sameSite: 'strict', // Prevent CSRF attacks
-    maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
-  });
+  // res.cookie('jwjt', refreshToken, {
+  //   httpOnly: true,
+  //   secure: process.env.NODE_ENV !== 'development', // Use secure cookies in production
+  //   sameSite: 'None', //strict for Prevent CSRF attacks
+  // //  maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+  // });
+
+  res.cookie('jwt', refreshToken, { httpOnly: true });
+ //   res.status(200).json({message:'Cookie sent!'});
  return accessToken //res.json(accessToken)
 };
 

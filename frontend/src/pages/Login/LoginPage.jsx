@@ -43,17 +43,29 @@ function LoginPage() {
 
     ];
 
+    useEffect(() => {
+        // Log the auth.accessToken when the auth state changes
+        console.log("AUTH STATE", auth);
+        //console.log("AUTH TOKEN", auth.accessToken);
+    }, [auth]);
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         let response;
         try {
-            response = await axios.post('http://localhost:5000/api/users/auth', values);
+           response = await axios.post('http://localhost:5000/api/users/auth', values,{withCredentials: true});
 
-             const accessToken = response.data.accessToken;
-             const role = response.data.role;
+             const accessToken =  response.data.accessToken;
+             const role =  response.data.role;
+             const email=values.email
 
-             setAuth({ email:values.email,role, accessToken });
+            setAuth({ email, role, accessToken });
+            
+             console.log(accessToken)
+             console.log(response.data.accessToken)
+             console.log(response.data.accessToken)
+             //console.log("COOKIE",response.data.cookies.jwt)
+            // console.log(auth)
              if(accessToken){navigate('/home');}
              
              //console.log("AUTH",auth)

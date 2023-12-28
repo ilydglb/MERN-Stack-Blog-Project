@@ -10,12 +10,12 @@ function AppNav() {
   return (
     <Navbar fixed='top' bg={theme === 'dark' ? 'dark' : 'light'} variant={theme === 'dark' ? 'dark' : 'light'}>
       <Container className='navbar-container'>
-        <Navbar.Brand href="#home">  <FaFeatherAlt className='icon' /> HepsiBlog</Navbar.Brand>
+        <Navbar.Brand href="/home">  <FaFeatherAlt className='icon' /> HepsiBlog</Navbar.Brand>
         <Navbar.Toggle />
         <Nav className="me-auto">
-          <Nav.Link href="#home">Home</Nav.Link>
-          <Nav.Link href="#features">Features</Nav.Link>
-          <Nav.Link href="#pricing">Pricing</Nav.Link>
+          <Nav.Link href="/home">Ana Sayfa</Nav.Link>
+          <Nav.Link href="#profile">Profilim</Nav.Link>
+          <Nav.Link href="#pricing">Konuşma Odaları</Nav.Link>
         </Nav>
         <Navbar.Collapse className="justify-content-end">
           <Navbar.Text>
