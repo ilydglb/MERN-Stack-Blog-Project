@@ -53,7 +53,7 @@ function LoginPage() {
 
         let response;
         try {
-           response = await axios.post('http://localhost:5000/api/users/auth', values,{withCredentials: true});
+           response = await axios.post('/api/users/auth', values,{withCredentials: true});
 
              const accessToken =  response.data.accessToken;
              const role =  response.data.role;
@@ -94,7 +94,7 @@ function LoginPage() {
 
     return (
     
-            <div className="formcontainer custom">
+            <div className="app formcontainer custom ">
                 <form>
                     <h1>Log In</h1>
                     {inputs.map((input) => (

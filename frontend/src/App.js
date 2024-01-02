@@ -8,6 +8,7 @@ import Home from './pages/Home/Home.jsx';
 import RequireAuth from './RequireAuth.js';
 import useTheme from './hooks/useTheme.js';
 import { ToastContainer } from 'react-toastify';
+import Write from './pages/Write Post/Write.jsx';
 
 function App() {
   const { theme } = useTheme();
@@ -15,13 +16,14 @@ function App() {
 
     <div value={{ theme }}>
       <div className={theme}>
-        <div className='app'>
-        <Routes>
-          <Route path='/home' element={<Home />} />
+      
+        <Routes>    
+          <Route path='/home' element={<Home  />} />
+          <Route path='/create'  element={<Write />} />
           <Route path='/login' element={<LoginPage />} />
-          <Route path='/register' element={<RegisterPage />} />
+          <Route path='/register'  element={<RegisterPage />} />
         </Routes>
-        </div>
+  
         <ToastContainer theme={theme === 'dark' ? 'dark' : 'light'}/>
       </div>
     </div>

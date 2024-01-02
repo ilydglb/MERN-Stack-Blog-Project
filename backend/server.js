@@ -6,6 +6,9 @@ import helmet from 'helmet';
 import session from 'express-session';
 import cors from 'cors'
 
+import { notFound, errorHandler } from './middleware/errorMiddleware.js';
+
+
 
 const port = process.env.PORT || 8000;
 connectDB()
@@ -33,13 +36,16 @@ app.use(express.urlencoded({ extended: true }));
 import cookieParser from 'cookie-parser';
 app.use(cookieParser())
 
-import userRoutes from './routes/userRoutes.js';
-app.use('/api/users', userRoutes);
 
-import { notFound, errorHandler } from './middleware/errorMiddleware.js';
+
+import userRoutes  from './routes/userRoutes.js';
+import postRoutes from './routes/postRoutes.js'
+app.use('/api/users', userRoutes );
+app.use('/api/posts', postRoutes);
+
+
 app.use(notFound);
 app.use(errorHandler);
-
 
 
 app.listen(port, () => console.log(`Server started on port ${port}`));

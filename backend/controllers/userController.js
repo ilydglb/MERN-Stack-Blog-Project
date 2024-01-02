@@ -80,6 +80,10 @@ const authUser = asyncHandler(async (req, res) => {
 // @route   POST /api/users/logout
 // @access  Public
 const logoutUser = asyncHandler(async(req, res) => {
+
+  req.headers.authorization ='';
+  req.headers.Authorization ='';
+  
   res.cookie('jwt', '', {
     httpOnly: true,
     expires: new Date(0),
@@ -134,8 +138,30 @@ const updateUserProfile = asyncHandler(async (req, res) => {
   }
 });
 
+import Post from '../models/postModel.js';
+const deleteUser = asyncHandler(async(req,res)=>{
+ 
+  const username = req.user.username;
+  const userId=req.user._id;
+
+  //delete user's posts
+  await Post.deleteMany({ postedBy: username });
+
+  // Then delete the user
+  const user = await User.findById(userId);
+
+  if (user) {
+    await user.deleteOne();
+    res.json({ message: 'User and associated posts deleted successfully' });
+  } else {
+    res.status(404);
+    throw new Error('User not found');
+  }
+});
+
 export { authUser,
     registerUser,
     logoutUser,
     getUserProfile,
-    updateUserProfile,};
+    updateUserProfile,
+  deleteUser};

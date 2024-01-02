@@ -72,7 +72,7 @@ const RegisterPage = () => {
   const handleRegister = async () => {
     let response;
     try {
-     response = await axios.post('http://localhost:5000/api/users/register',  values);
+     response = await axios.post('/api/users/register',  values);
       console.log(response.data); // Handle the response as needed
     } catch (error) {
       
@@ -124,7 +124,7 @@ const validateForm = () => {
   
 
   return (
-  
+  <div className="app">
     <div className="formcontainer">
       <form>
         <h1>Register</h1>
@@ -148,7 +148,7 @@ const validateForm = () => {
          </span>
          
     </div>
-        
+    </div>    
    
    
   );
