@@ -7,7 +7,7 @@ import axios from 'axios';
 import { DataView } from 'primereact/dataview';
 import Button from 'react-bootstrap/Button';
 import useTheme from '../../hooks/useTheme';
-
+import { IoSearch } from "react-icons/io5";
 
 import { InputText } from 'primereact/inputtext';
 
@@ -15,19 +15,25 @@ import { Dropdown } from 'primereact/dropdown';
 
 import { Tag } from 'primereact/tag';
  
-
+import { useNavigate } from 'react-router-dom';
 const Home = () => {
   const [posts, setPosts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 9;
   const [btnstate, setBtnState] = useState(0);
-
+  const navigate=useNavigate()
   const { theme } = useTheme()
+
+  const PF="localhost:5000/images/";
+  
+ 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         const response = await axios.get(`/api/posts`);
-        setPosts(response.data);
+        const sortedPosts = response.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        setPosts(sortedPosts);
+        //setPosts(response.data);
       } catch (error) {
         console.error(error);
       }
@@ -35,6 +41,10 @@ const Home = () => {
 
     fetchPosts();
   }, []);
+
+  const handleCardClick =(postId)=> {
+    navigate(`/post/${postId}`);
+  }
 
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
@@ -46,8 +56,8 @@ const Home = () => {
         <Card
           title={post.title}
           subTitle={`by ${post.postedBy} Created at: ${new Date(post.createdAt).toLocaleString()} `}
-          header={<img alt="Card" src="https://primefaces.org/cdn/primereact/images/usercard.png" />}
-          footer={<div> <Button className="mt-2 mb-2" variant={theme === 'light' ? 'outline-dark' : 'outline-light'}>Daha fazla oku </Button>
+          header={<img alt="Card" src={``} />}
+          footer={<div> <Button className="mt-2 mb-2" variant={theme === 'light' ? 'outline-dark' : 'outline-light'} onClick={() => handleCardClick(post._id)}>Daha fazla oku </Button>
          
           {post.categories.map((category, index) => (
     <Tag key={index} className='p-1 tag mt-3'>{category}</Tag>
@@ -81,13 +91,17 @@ const Home = () => {
           <div className="p-inputgroup">
             <InputText
               placeholder="Ara"
-              onChange={''}
+          
               value={''}
             />
-            <Button
-             
-              onClick={() => { }}
-            />
+            <IoSearch onClick={() => { }} className='mt-0.5 ml-1'style={{
+   
+       height: "100%",
+       fontSize: 27,
+  
+     }}/>
+              
+      
            
           </div>
         </div>
@@ -95,7 +109,7 @@ const Home = () => {
           <Dropdown
             value={``}
             options={''}
-            onChange={''}
+            className='mt-3'
             placeholder="Sort"
           />
         </div>
@@ -105,7 +119,7 @@ const Home = () => {
       <div className="dataview-container col-9">
         <Row>
           {currentPosts.map((post, index) => (
-            <Col key={index} md={4}>
+            <Col key={index} md={4} >
               {itemTemplate(post)}
             </Col>
           ))}
@@ -124,7 +138,7 @@ const Home = () => {
           <h2 className='mb-3'>Kategoriler</h2>
             <Button className={btnstate == 1 ? "selected" : " "} onClick={()=>{if(btnstate==0)setBtnState(1);
             else 
-            setBtnState(0)}} variant="outline-light">
+            setBtnState(0)}} variant="outline-light" >
               Sanat
             </Button>
             <Button className="btn" variant="outline-light">

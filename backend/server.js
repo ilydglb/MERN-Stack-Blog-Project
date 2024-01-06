@@ -8,9 +8,10 @@ import cors from 'cors'
 
 import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 
+import multer from 'multer';
+import path from 'path';
 
-
-const port = process.env.PORT || 8000;
+const port = process.env.PORT;
 connectDB()
 const app = express();  //initialize express
 app.use(cors({ origin: 'http://localhost:3000',  credentials: true, }));
@@ -43,6 +44,20 @@ import postRoutes from './routes/postRoutes.js'
 app.use('/api/users', userRoutes );
 app.use('/api/posts', postRoutes);
 
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "./backend/images/");
+  },
+  filename: (req, file, cb) => {
+    cb(null, req.body.name);
+  },
+});
+
+const upload = multer({ storage: storage });
+app.post("/api/upload", upload.single("file"), (req, res) => {
+  res.status(200).json("File has been uploaded");
+});
 
 app.use(notFound);
 app.use(errorHandler);

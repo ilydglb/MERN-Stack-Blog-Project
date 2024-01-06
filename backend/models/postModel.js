@@ -18,13 +18,13 @@ const postSchema = mongoose.Schema(
         categories: 
            {
             type:Array,
-            required:true,
+           // required:[true, "Lütfen kategori seçin"],
            },
         
-        // image: {
-        //     url: String,
-        //     public_id: String,
-        // },
+        image: {
+            type: String,
+            default: "",
+        },
         likes: [{ type: mongoose.Types.ObjectId, ref: "User" }],
         comments: [
             {

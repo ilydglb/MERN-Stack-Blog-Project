@@ -1,4 +1,3 @@
-//const cloudinary = require('../utils/cloudinary');
 import Post from '../models/postModel.js'
 import mongoose from 'mongoose';
 
@@ -14,7 +13,7 @@ const createPost = async (req, res, next) => {
             content,
             postedBy: req.user.username,
             categories,
-            
+            image,
 
         });
         res.status(201).json({
@@ -31,18 +30,38 @@ const createPost = async (req, res, next) => {
 }
 
 
-const showPosts = async (req, res, next) => {
-    try {
-         const posts = await Post.find().sort({ createdAt: -1 })
-        //.populate('postedBy', 'name');
-        res.status(201).json(
-            posts
-        )
-    } catch (error) {
-        next(error);
-    }
+// const showPosts = async (req, res, next) => {
+//     try {
+//          const posts = await Post.find().sort({ createdAt: -1 })
+//         //.populate('postedBy', 'name');
+//         res.status(201).json(
+//             posts
+//         )
+//     } catch (error) {
+//         next(error);
+//     }
 
-}
+// }
+
+const showPosts = async (req, res) => {
+    const postedBy = req.query.user;
+    // console.log("req query",req.query.user)
+    // console.log("POSTEDBY ",postedBy)
+  //  const catName = req.query.cat;
+    try {
+      let posts;
+      if (postedBy) {
+        posts = await Post.find({ postedBy });
+      } 
+       else {
+        posts = await Post.find();
+      }
+      res.status(200).json(posts);
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  }
+  
 
 
 

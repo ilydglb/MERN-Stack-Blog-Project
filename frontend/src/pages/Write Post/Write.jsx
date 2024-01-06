@@ -1,57 +1,84 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import ReactQuill from "react-quill";
+import Button from 'react-bootstrap/Button';
 import "react-quill/dist/quill.snow.css";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
-//import moment from "moment";
+import { toast } from 'react-toastify';
+import useAuth from "../../hooks/useAuth";
 
 const Write = () => {
-  const state = useLocation().state;
-  const [value, setValue] = useState(state?.title || "");
-  const [title, setTitle] = useState(state?.desc || "");
+  const {auth}=useAuth();
+  const [value, setValue] = useState("");
+  const [title, setTitle] = useState("");
   const [file, setFile] = useState(null);
-  const [cat, setCat] = useState(state?.cat || "");
+  const [cat, setCat] = useState("");
+  const [selectedCategories, setSelectedCategories] = useState([]);
 
   const navigate = useNavigate()
+const headers = {
+  Authorization: `Bearer ${auth.accessToken}`, 
+};
 
   const upload = async () => {
-    try {
-      const formData = new FormData();
-      formData.append("file", file);
-      const res = await axios.post("/upload", formData);
-      return res.data;
-    } catch (err) {
-      console.log(err);
-    }
+    
+    
   };
 
-  const handleClick = async (e) => {
-    e.preventDefault();
-    const imgUrl = await upload();
 
+  const handleClick = async (e) => {
+    let filename;
+    e.preventDefault();
+    // const imgUrl = await upload();
+    // console.log("img url",imgUrl)
+if(file){
+    const formData = new FormData();
+     filename= Date.now()+file.name;
+    formData.append("name", filename);
+    formData.append("file", file);
+   // post.image=filename;
     try {
-      state
-        ? await axios.put(`/posts/${state.id}`, {
-            title,
-            desc: value,
-            cat,
-            img: file ? imgUrl : "",
-          })
-        : await axios.post(`/posts/`, {
-            title,
-            desc: value,
-            cat,
-            img: file ? imgUrl : "",
-            
-          });
-          navigate("/")
-    } catch (err) {
-      console.log(err);
-    }
+    const res = await axios.post("/api/upload", formData);
+    console.log("RES",res.data)
+    console.log("FILE",file)
+    //return res.data;
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+let response;
+  try {
+    
+    
+    response= await axios.post(`/api/posts/create`, {
+      title, 
+      content: value,
+      categories: selectedCategories,
+      image: file ? filename : "",
+    }, { headers });
+    await toast.success('Başarıyla paylaşıldı.');
+    navigate("/home");
+  } catch (err) {
+    
+    await toast.error(err.response.data.message);console.log(err);
+  }
+};
+  const handleCategoryChange = (e) => {
+    const selectedCategory = e.target.value;
+    setSelectedCategories((prevCategories) => {
+      if (prevCategories.includes(selectedCategory)) {
+        // If category is already selected, remove it
+        return prevCategories.filter((category) => category !== selectedCategory);
+      } else {
+        // If category is not selected, add it
+        return [...prevCategories, selectedCategory];
+      }
+    });
   };
 
   return (
-    <div className="app">
+    <div className="app write">
     <div className="add m-auto col-10 mt-5">
       <div className="content">
         <input
@@ -66,7 +93,7 @@ const Write = () => {
             theme="snow"
             value={value}
             onChange={setValue}
-            style={{ fontSize: '36px' }}
+           
           />
         </div>
       </div>
@@ -82,87 +109,72 @@ const Write = () => {
           <input
             style={{ display: "none" }}
             type="file"
-            id="file"
+            id="fileInput"
             name=""
             onChange={(e) => setFile(e.target.files[0])}
           />
-          <label className="file" htmlFor="file">
-            Upload Image
+          <label className="file" htmlFor="fileInput">
+            Fotoğraf yükleyin
           </label>
           <div className="buttons">
-            <button>Save as a draft</button>
-            <button onClick={handleClick}>Publish</button>
+          <Button className="btn mr-2" variant="outline-dark">Taslak olarak kaydet</Button>
+          <Button className="btn" variant="outline-dark" onClick={handleClick}>Paylaş</Button>
           </div>
         </div>
         <div className="item">
-          <h1>Category</h1>
-          <div className="cat">
-            <input
-              type="radio"
-              checked={cat === "art"}
-              name="cat"
-              value="art"
-              id="art"
-              onChange={(e) => setCat(e.target.value)}
-            />
-            <label htmlFor="art">Art</label>
-          </div>
-          <div className="cat">
-            <input
-              type="radio"
-              checked={cat === "science"}
-              name="cat"
-              value="science"
-              id="science"
-              onChange={(e) => setCat(e.target.value)}
-            />
-            <label htmlFor="science">Science</label>
-          </div>
-          <div className="cat">
-            <input
-              type="radio"
-              checked={cat === "technology"}
-              name="cat"
-              value="technology"
-              id="technology"
-              onChange={(e) => setCat(e.target.value)}
-            />
-            <label htmlFor="technology">Technology</label>
-          </div>
-          <div className="cat">
-            <input
-              type="radio"
-              checked={cat === "cinema"}
-              name="cat"
-              value="cinema"
-              id="cinema"
-              onChange={(e) => setCat(e.target.value)}
-            />
-            <label htmlFor="cinema">Cinema</label>
-          </div>
-          <div className="cat">
-            <input
-              type="radio"
-              checked={cat === "design"}
-              name="cat"
-              value="design"
-              id="design"
-              onChange={(e) => setCat(e.target.value)}
-            />
-            <label htmlFor="design">Design</label>
-          </div>
-          <div className="cat">
-            <input
-              type="radio"
-              checked={cat === "food"}
-              name="cat"
-              value="food"
-              id="food"
-              onChange={(e) => setCat(e.target.value)}
-            />
-            <label htmlFor="food">Food</label>
-          </div>
-        </div>
+      <h1>Category</h1>
+      {/* Use checkboxes for category selection */}
+      <div className="cat">
+        <input
+          type="checkbox"
+          checked={selectedCategories.includes("Sanat")}
+          value="Sanat"
+          id="Sanat"
+          onChange={handleCategoryChange}
+        />
+        <label htmlFor="Sanat">Sanat</label>
+      </div>
+      <div className="cat">
+        <input
+          type="checkbox"
+          checked={selectedCategories.includes("Teknoloji")}
+          value="Teknoloji"
+          id="Teknoloji"
+          onChange={handleCategoryChange}
+        />
+        <label htmlFor="Teknoloji">Teknoloji</label>
+      </div>
+      <div className="cat">
+        <input
+          type="checkbox"
+          checked={selectedCategories.includes("Gündem")}
+          value="Gündem"
+          id="Gündem"
+          onChange={handleCategoryChange}
+        />
+        <label htmlFor="Gündem">Gündem</label>
+      </div>
+      <div className="cat">
+        <input
+          type="checkbox"
+          checked={selectedCategories.includes("Spor")}
+          value="Spor"
+          id="Spor"
+          onChange={handleCategoryChange}
+        />
+        <label htmlFor="Spor">Spor</label>
+      </div>
+      <div className="cat">
+        <input
+          type="checkbox"
+          checked={selectedCategories.includes("Diğer")}
+          value="Diğer"
+          id="Diğer"
+          onChange={handleCategoryChange}
+        />
+        <label htmlFor="Diğer">Diğer</label>
+      </div>
+    </div>
       </div>
     </div></div>
   );

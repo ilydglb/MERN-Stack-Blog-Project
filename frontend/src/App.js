@@ -9,9 +9,13 @@ import RequireAuth from './RequireAuth.js';
 import useTheme from './hooks/useTheme.js';
 import { ToastContainer } from 'react-toastify';
 import Write from './pages/Write Post/Write.jsx';
+import SinglePost from './pages/Single Post/SinglePost.jsx';
+import useAuth from './hooks/useAuth.js';
 
 function App() {
   const { theme } = useTheme();
+  const { auth } = useAuth();
+
   return (
 
     <div value={{ theme }}>
@@ -19,9 +23,10 @@ function App() {
       
         <Routes>    
           <Route path='/home' element={<Home  />} />
-          <Route path='/create'  element={<Write />} />
+          <Route path='/create'   element={auth ? <Write /> : <LoginPage/>}  />
           <Route path='/login' element={<LoginPage />} />
           <Route path='/register'  element={<RegisterPage />} />
+          <Route path='/post/:id'  element={<SinglePost />} />
         </Routes>
   
         <ToastContainer theme={theme === 'dark' ? 'dark' : 'light'}/>

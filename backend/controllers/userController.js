@@ -2,10 +2,11 @@ import asyncHandler from 'express-async-handler'
 import User from '../models/userModel.js'
 import bcrypt from 'bcryptjs';
 import generateToken from '../utils/generateToken.js';
-  
+
   const registerUser = asyncHandler(async(req, res) => {
     const { username, email, password } = req.body;
 
+    
     const userExists = await User.findOne({ email });
   
     if (userExists) {
