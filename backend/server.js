@@ -9,29 +9,29 @@ import cors from 'cors'
 import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 
 import multer from 'multer';
-import path from 'path';
+
 
 const port = process.env.PORT;
 connectDB()
 const app = express();  //initialize express
 app.use(cors({ origin: 'http://localhost:3000',  credentials: true, }));
-// app.get('/', (req, res) => {
-//   res.send('Server is ready');
-// });
 
 //In order to be able to get the data from the request body
 //Request Body Parser Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-//app.use(helmet())
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import path from 'path';
 
-// app.use(session({
-//     secret: 'your-secret-key',
-//     resave: false,
-//     saveUninitialized: false,
-//     cookie: { sameSite: 'strict' }
-//   }));
+// Get the directory path of the current module file
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// Append the "images" folder to the directory path
+const imagesFolderPath = path.join(__dirname, 'images');
+app.use("/images", express.static(imagesFolderPath));
 
 //middleware for cookies
 import cookieParser from 'cookie-parser';

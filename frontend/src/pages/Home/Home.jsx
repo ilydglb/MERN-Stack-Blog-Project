@@ -24,7 +24,7 @@ const Home = () => {
   const navigate=useNavigate()
   const { theme } = useTheme()
 
-  const PF="localhost:5000/images/";
+  const PF="http://localhost:5000/images/";
   
  
   useEffect(() => {
@@ -56,7 +56,7 @@ const Home = () => {
         <Card
           title={post.title}
           subTitle={`by ${post.postedBy} Created at: ${new Date(post.createdAt).toLocaleString()} `}
-          header={<img alt="Card" src={``} />}
+          header={<img alt="Card" src={PF+post.image} className='card-image'/>}
           footer={<div> <Button className="mt-2 mb-2" variant={theme === 'light' ? 'outline-dark' : 'outline-light'} onClick={() => handleCardClick(post._id)}>Daha fazla oku </Button>
          
           {post.categories.map((category, index) => (

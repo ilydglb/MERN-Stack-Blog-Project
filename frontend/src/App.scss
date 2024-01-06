@@ -391,3 +391,9 @@ font-weight: bold;}
     height: 110vh;
   }
 }
+
+.card-image {
+  width: 100%; /* Make the image take 100% of its container width */
+  height: 200px; /* Set a fixed height or use another unit like percentage, em, etc. */
+  object-fit: cover; /* Maintain aspect ratio and cover the entire container */
+}
