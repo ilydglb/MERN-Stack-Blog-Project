@@ -4,7 +4,7 @@ import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import { Paginator } from 'primereact/paginator';
 import axios from 'axios';
-import { DataView } from 'primereact/dataview';
+
 import Button from 'react-bootstrap/Button';
 import useTheme from '../../hooks/useTheme';
 import { IoSearch } from "react-icons/io5";
@@ -16,13 +16,18 @@ import { Dropdown } from 'primereact/dropdown';
 import { Tag } from 'primereact/tag';
  
 import { useNavigate } from 'react-router-dom';
+import DOMPurify from "dompurify";
+import { formatDistanceToNow } from 'date-fns';
 const Home = () => {
   const [posts, setPosts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 9;
   const [btnstate, setBtnState] = useState(0);
   const navigate=useNavigate()
-  const { theme } = useTheme()
+  const { theme } = useTheme();
+  const [filteredPosts, setFilteredPosts] = useState([]);
+  const [globalFilter, setGlobalFilter] = useState('');
+  const [currentCats, setCurrentCats] = useState('');
 
   const PF="http://localhost:5000/images/";
   
@@ -43,7 +48,8 @@ const Home = () => {
   }, []);
 
   const handleCardClick =(postId)=> {
-    navigate(`/post/${postId}`);
+    console.log("pip",postId)
+    navigate(`/post/${postId}`,{ state: { postId }});
   }
 
   const indexOfLastPost = currentPage * postsPerPage;
@@ -51,12 +57,21 @@ const Home = () => {
   const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
 
   const itemTemplate = (post) => {
+    const distanceToNow = formatDistanceToNow(new Date(post.createdAt), { addSuffix: true });
+
     return (
       <div className="flex justify-content-center ml-3 mb-3 card-container ">
         <Card
-          title={post.title}
-          subTitle={`by ${post.postedBy} Created at: ${new Date(post.createdAt).toLocaleString()} `}
-          header={<img alt="Card" src={PF+post.image} className='card-image'/>}
+          title={<div className="card-title mt-3">{post.title}</div>}
+          subTitle={  <div className="d-flex justify-content-between">
+          <span>by {post.postedBy}</span>
+          <span>{distanceToNow}</span>
+        </div>}
+    header={post.image ? (
+      <img alt="Card" src={PF + post.image} className='card-image' />
+    ) : (
+      <></>
+    )}
           footer={<div> <Button className="mt-2 mb-2" variant={theme === 'light' ? 'outline-dark' : 'outline-light'} onClick={() => handleCardClick(post._id)}>Daha fazla oku </Button>
          
           {post.categories.map((category, index) => (
@@ -64,13 +79,15 @@ const Home = () => {
 ))}
           
           </div> }
-          className="md:w-30rem cardd"
+          className="w-30rem cardd"
         >
-          <p className="m-0 pt-3">
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur error repudiandae...
-
-          </p>
-         
+                 <p className="m-0 pt-3">
+  <> 
+    <div dangerouslySetInnerHTML={{
+      __html: DOMPurify.sanitize(post.content.split(' ').slice(0,10).join(' ') +'...'),
+    }} />
+  </>
+</p>
         </Card>
       </div>
     );
@@ -79,9 +96,13 @@ const Home = () => {
   const onPageChange = (event) => {
     setCurrentPage(event.page + 1);
   };
+  const handleF = (e) => {
+    e.preventDefault()
+    console.log("sdohfnodsnf")
+  };
 
   return (
-   < div className='app2 '>
+   < div className='app2'>
     <div className="main-container col-11">
 
 <div className='col-9'>
@@ -93,16 +114,14 @@ const Home = () => {
               placeholder="Ara"
           
               value={''}
+              style={{
+                borderRadius: "0%",}}
             />
-            <IoSearch onClick={() => { }} className='mt-0.5 ml-1'style={{
-   
-       height: "100%",
-       fontSize: 27,
-  
-     }}/>
-              
-      
-           
+          <Button variant= 'outline-light 'style={{backgroundColor:'#465c5a'}} 
+            onClick={() => { handleF()}} >
+              <IoSearch 
+                        className=''style={{ height: "100%", fontSize: 20,}}/> 
+          </Button>
           </div>
         </div>
         <div>

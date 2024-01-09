@@ -9,61 +9,70 @@ import useAuth from "../../hooks/useAuth";
 
 const Write = () => {
   const {auth}=useAuth();
-  const [value, setValue] = useState("");
-  const [title, setTitle] = useState("");
+  const state = useLocation().state;
+  const [value, setValue] = useState(state?.content || "");
+  const [title, setTitle] = useState(state?.title || "");
   const [file, setFile] = useState(null);
-  const [cat, setCat] = useState("");
-  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState(state?.categories || []);
+
 
   const navigate = useNavigate()
 const headers = {
   Authorization: `Bearer ${auth.accessToken}`, 
 };
 
-  const upload = async () => {
-    
-    
-  };
+ 
 
-
-  const handleClick = async (e) => {
-    let filename;
-    e.preventDefault();
-    // const imgUrl = await upload();
-    // console.log("img url",imgUrl)
+const handleClick = async (e) => {
+  let filename;
+  e.preventDefault();
+  // const imgUrl = await upload();
+  // console.log("img url",imgUrl)
 if(file){
-    const formData = new FormData();
-     filename= Date.now()+file.name;
-    formData.append("name", filename);
-    formData.append("file", file);
-   // post.image=filename;
-    try {
-    const res = await axios.post("/api/upload", formData);
-    console.log("RES",res.data)
-    console.log("FILE",file)
-    //return res.data;
-  } catch (err) {
-    console.log(err);
-  }
+  const formData = new FormData();
+   filename= Date.now()+file.name;
+  formData.append("name", filename);
+  formData.append("file", file);
+ // post.image=filename;
+  try {
+  const res = await axios.post("/api/upload", formData);
+  console.log("RES",res.data)
+  console.log("FILE",file)
+  //return res.data;
+} catch (err) {
+  console.log(err);
+}
 }
 
 let response;
-  try {
-    
-    
-    response= await axios.post(`/api/posts/create`, {
-      title, 
+try {
+  if (state) {  //update
+    response = await axios.put(`/api/posts/${state._id}`, {
+      title,
+      content: value,
+      categories: selectedCategories,
+      image: file ? filename : "",
+    }, { headers });
+    await toast.success('Başarıyla güncellendi.');
+  } 
+  else {  //create
+    response = await axios.post(`/api/posts/create`, {
+      title,
       content: value,
       categories: selectedCategories,
       image: file ? filename : "",
     }, { headers });
     await toast.success('Başarıyla paylaşıldı.');
-    navigate("/home");
-  } catch (err) {
-    
-    await toast.error(err.response.data.message);console.log(err);
   }
+  navigate("/");
+} catch (err) {
+  await toast.error(err.response.data.message);
+  console.log(err);
+}
+
 };
+
+
   const handleCategoryChange = (e) => {
     const selectedCategory = e.target.value;
     setSelectedCategories((prevCategories) => {
@@ -99,30 +108,33 @@ let response;
       </div>
       <div className="menu">
         <div className="item">
-          <h1>Publish</h1>
+          <h1>Yayınla</h1>
           <span>
-            <b>Status: </b> Draft
+            <b>Durum: </b> Taslak
           </span>
           <span>
-            <b>Visibility: </b> Public
+            <b>Görünürlük: </b> Herkese açık
           </span>
-          <input
-            style={{ display: "none" }}
-            type="file"
-            id="fileInput"
-            name=""
-            onChange={(e) => setFile(e.target.files[0])}
-          />
-          <label className="file" htmlFor="fileInput">
+          <label className="mt-2 mb-1">
             Fotoğraf yükleyin
           </label>
-          <div className="buttons">
-          <Button className="btn mr-2" variant="outline-dark">Taslak olarak kaydet</Button>
-          <Button className="btn" variant="outline-dark" onClick={handleClick}>Paylaş</Button>
+          <input
+            
+            type="file"
+            id="fileInput"
+            accept="image/*"
+            onChange={(e) => setFile(e.target.files[0])}
+          />
+          
+          <div className="buttons mt-5">
+          <Button className="btn" variant="outline-dark" onClick={handleClick }>
+  {state ? 'Güncelle' : 'Paylaş'}
+</Button>
+
           </div>
         </div>
         <div className="item">
-      <h1>Category</h1>
+      <h1>Kategori</h1>
       {/* Use checkboxes for category selection */}
       <div className="cat">
         <input

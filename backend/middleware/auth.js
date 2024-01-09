@@ -48,15 +48,22 @@ const isAdmin = async (req,res,next)=>{
 }
 next(); 
 }
-const isOwnerOrAdmin = async (req,res,next)=>{
+const isOwnerOrAdmin = async (req, res, next) => {
+  try {
+    const post = await Post.findById(req.params.id);
 
-  const post = await Post.findById(req.params.id)
-  // console.log("postedby id: ", post.postedBy)  //postun idsi
-  // console.log("req userid: ",req.user.username)
+    // Check if the user is the owner or an admin
+    if (req.user.username !== post.postedBy && req.user.role !== 'admin') {
+      return res.status(403).json({ error: 'You must be the owner or an admin' });
+    }
 
-  if (req.user.username !== req.user.username || req.user.role !== 'admin') {
-    return res.status(403).json({ error: 'You must be the owner' });
-}
-next(); 
-}
+    // If the user is the owner or an admin, proceed to the next middleware or route handler
+    next();
+  } catch (error) {
+    // Handle any errors that may occur during the Post.findById() operation
+    console.error(error);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
 export {verifyJWT, isOwnerOrAdmin};

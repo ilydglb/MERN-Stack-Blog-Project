@@ -63,6 +63,7 @@ const authUser = asyncHandler(async (req, res) => {
       username: user.username,
       email: user.email,
       role:user.role,
+      profilePic:user.profilePic,
       accessToken: generateToken(res, user._id)
     });
 
@@ -119,8 +120,11 @@ const updateUserProfile = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id);
 
   if (user) {
-    user.username = req.body.username || user.username; //eğer girilmediyse olduğu gibi kalsın 
+    const originalUsername = user.username;
+
+    user.username = req.body.username || user.username;
     user.email = req.body.email || user.email;
+    user.profilePic = req.body.profilePic || user.profilePic;
 
     if (req.body.password) {
       user.password = req.body.password;
@@ -128,16 +132,23 @@ const updateUserProfile = asyncHandler(async (req, res) => {
 
     const updatedUser = await user.save();
 
+    if (originalUsername !== updatedUser.username) {
+      // Update the username in user's posts
+      await Post.updateMany({ postedBy: updatedUser.username });
+    }
+
     res.json({
       _id: updatedUser._id,
       username: updatedUser.username,
       email: updatedUser.email,
+      profilePic: updatedUser.profilePic,
     });
   } else {
     res.status(404);
     throw new Error('User not found');
   }
 });
+
 
 import Post from '../models/postModel.js';
 const deleteUser = asyncHandler(async(req,res)=>{

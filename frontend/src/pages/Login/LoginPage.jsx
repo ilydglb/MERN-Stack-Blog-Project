@@ -57,16 +57,19 @@ function LoginPage() {
 
              const accessToken =  response.data.accessToken;
              const role =  response.data.role;
+             const username= response.data.username
+            // const userId= response.data.userId
              const email=values.email
+             const profilePic = response.data.profilePic
 
-            setAuth({ email, role, accessToken });
+            setAuth({ username, role, email, profilePic, accessToken });
             
              console.log(accessToken)
              console.log(response.data.accessToken)
              console.log(response.data.accessToken)
              //console.log("COOKIE",response.data.cookies.jwt)
             // console.log(auth)
-             if(accessToken){navigate('/home');}
+             if(accessToken){navigate('/');}
              
              //console.log("AUTH",auth)
         } catch (error) {

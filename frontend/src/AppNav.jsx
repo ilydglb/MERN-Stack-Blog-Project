@@ -19,7 +19,8 @@ function AppNav() {
   const [showDropdown, setShowDropdown] = useState(false);
   const { theme } = useTheme();
   const {auth,setAuth}=useAuth()  // const {acccessToken,setAuth}=useAuth()
- const navigate=useNavigate()
+ const navigate=useNavigate();
+ const PF = "http://localhost:5000/images/"
 
   const handleDropdownToggle = () => {
     setShowDropdown(!showDropdown);
@@ -43,25 +44,25 @@ function AppNav() {
   };
 
   const handleProfile = () => {
-   // navigate(`/my-profile`);
+    navigate(`/my-profile`);
   };
 
 
   return (
     <Navbar sticky="top" bg={theme === 'dark' ? 'dark' : 'light'} variant={theme === 'dark' ? 'dark' : 'light'} className='navbar'>
       <Container>
-        <Navbar.Brand href="/home">
+        <Navbar.Brand href="/">
           <FaFeatherAlt className="icon" /> HepsiBlog
         </Navbar.Brand>
         <Navbar.Toggle />
         <Nav className="me-auto">
-          <Nav.Link href="/home">Ana Sayfa</Nav.Link>
+          <Nav.Link href="/">Ana Sayfa</Nav.Link>
           {auth ? (<Nav.Link href="#profile">Kullanıcılar</Nav.Link> ):(<Nav.Link href="/login">Giriş Yapın</Nav.Link>)}
           {auth ? (<Nav.Link href="#pricing">Konuşma Odaları</Nav.Link>):(<Nav.Link href="/register">Kayıt Olun</Nav.Link>)}
         </Nav>
         <Navbar.Collapse className="justify-content-end">
           <Navbar.Text>
-            <Link to="/create">
+            <Link to="/write">
               <TfiWrite
                 style={{
                   fontSize: 30,
@@ -76,8 +77,8 @@ function AppNav() {
 {auth ? ( <Dropdown show={showDropdown} onToggle={handleDropdownToggle} onClose={handleDropdownClose} className='mr-3'>
         <Dropdown.Toggle  variant={theme === 'dark' ? 'dark' : 'light'} id="dropdown-basic" style={{ display: 'flex', alignItems: 'center' }}>
           <Avatar
-            image={
-              'https://images.ctfassets.net/h6goo9gw1hh6/2sNZtFAWOdP1lmQ33VwRN3/24e953b920a9cd0ff2e1d587742a2472/1-intro-photo-final.jpg?w=1200&h=992&q=70&fm=webp'
+            image={auth?.profilePic ?  (PF+auth.profilePic):
+              ('https://www.hotelbooqi.com/wp-content/uploads/2021/12/128-1280406_view-user-icon-png-user-circle-icon-png.png')
             }
             className=""
             size="large"

@@ -1,25 +1,61 @@
+
+.dark{.singlePost{
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+  background-color: rgba(0, 0, 0, 0.5);
+ 
+}
+.singlePostDesc{
+  color: rgb(193, 189, 189);
+}}
 .singlePost {
     flex: 9;
+
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background-color: rgba(255, 255, 255, 0.5);
+  padding: 30px;
+
+  margin-top: 5vh; 
+  margin-bottom: 10vh;
+  overflow: auto;  
+  body{overflow: hidden;}
   }
   
   .singlePostWrapper {
-    padding: 20px;
-    padding-right: 0;
+    // padding: 20px;
+    // padding-right: 0;
+  //    max-width: 600px;  // Set a fixed max-width for the content
+  // width: 100%;
+  // padding: 20px;
+  
+  text-align: center;
+ 
+
   }
   
   .singlePostImg {
     width: 100%;
-    height: 300px;
+    max-height: 500px;
     border-radius: 5px;
-    object-fit: cover;
+    object-fit: contain;
+    margin-left: auto;
+
+
+    //object-position: center;
+    // object-fit: cover; /* or contain, depending on your preference */
+    // object-position: center; /* Center the image */
+    // max-width: 150%; /* Ensure the image doesn't exceed its container's width */
+    // max-height: 150%; 
+    // margin-left: 25%;
   }
   
   .singlePostTitle {
     text-align: center;
-    margin: 10px;
-    font-size: 28px;
-    font-family: "Lora", sans-serif;
+    margin: 3%;
+    font-size: 35px;
+    //font-family: "Lora", sans-serif;
     color: #555;
+    font-weight: bold;
+
   }
   
   .singlePostEdit {
@@ -60,6 +96,7 @@
     color: #666;
     font-size: 18px;
     line-height: 25px;
+    text-align: left;
   }
   
   .singlePostDesc::first-letter {

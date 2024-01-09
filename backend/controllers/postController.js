@@ -121,8 +121,8 @@ const updatePost = async (req, res, next) => {
         post.title = req.body.title || post.title;
         post.content = req.body.content || post.content;
         post.categories = req.body.categories || post.categories;
-        //image
-
+        post.image= req.body.image || post.image;
+        
         const updatedPost = await post.save();
   
         res.json({
