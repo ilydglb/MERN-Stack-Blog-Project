@@ -6,9 +6,9 @@ import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
 import useAuth from "../../hooks/useAuth";
+import useRefreshToken from "../../hooks/useRefreshToken";
 
 const Write = () => {
-  const {auth}=useAuth();
   const state = useLocation().state;
   const [value, setValue] = useState(state?.content || "");
   const [title, setTitle] = useState(state?.title || "");
@@ -16,29 +16,37 @@ const Write = () => {
   const [selectedCategories, setSelectedCategories] = useState(state?.categories || []);
 
 
-  const navigate = useNavigate()
-const headers = {
-  Authorization: `Bearer ${auth.accessToken}`, 
-};
+  const categories = [
+    { value: "Sanat", label: "Sanat" },
+    { value: "Teknoloji", label: "Teknoloji" },
+    { value: "Gündem", label: "Gündem" },
+    { value: "Spor", label: "Spor" },
+    { value: "Gezi", label: "Gezi" },
+    { value: "Diğer", label: "Diğer" },
+  ];
+  
 
- 
+  const navigate = useNavigate();
+  const refresh= useRefreshToken(); 
 
-const handleClick = async (e) => {
+  
+
+const handleClick = async () => {
   let filename;
-  e.preventDefault();
-  // const imgUrl = await upload();
-  // console.log("img url",imgUrl)
+ 
+   
+ 
 if(file){
   const formData = new FormData();
    filename= Date.now()+file.name;
   formData.append("name", filename);
   formData.append("file", file);
- // post.image=filename;
+
   try {
   const res = await axios.post("/api/upload", formData);
   console.log("RES",res.data)
   console.log("FILE",file)
-  //return res.data;
+
 } catch (err) {
   console.log(err);
 }
@@ -46,8 +54,18 @@ if(file){
 
 let response;
 try {
+ 
+  const newAccessToken = await refresh();
+  console.log("Yeni acessToken:",newAccessToken)
+
+
+  const headers ={ 
+    Authorization: `Bearer ${newAccessToken}`,
+   }
+
   if (state) {  //update
-    response = await axios.put(`/api/posts/${state._id}`, {
+   
+    response = await axios.put(`/api/posts/${state._id}`,  {
       title,
       content: value,
       categories: selectedCategories,
@@ -56,12 +74,13 @@ try {
     await toast.success('Başarıyla güncellendi.');
   } 
   else {  //create
-    response = await axios.post(`/api/posts/create`, {
+   
+    response = await axios.post(`/api/posts/create`,  {
       title,
       content: value,
       categories: selectedCategories,
       image: file ? filename : "",
-    }, { headers });
+    }, { headers});
     await toast.success('Başarıyla paylaşıldı.');
   }
   navigate("/");
@@ -92,7 +111,7 @@ try {
       <div className="content">
         <input
           type="text"
-          placeholder="Title"
+          placeholder="Başlık"
           onChange={(e) => setTitle(e.target.value)}
           style={{   border: '1px solid lightgray'}}
         />
@@ -123,6 +142,7 @@ try {
             type="file"
             id="fileInput"
             accept="image/*"
+            style={{ background: 'transparent' }}
             onChange={(e) => setFile(e.target.files[0])}
           />
           
@@ -134,59 +154,22 @@ try {
           </div>
         </div>
         <div className="item">
-      <h1>Kategori</h1>
-      {/* Use checkboxes for category selection */}
-      <div className="cat">
+  <h1>Kategori</h1>
+  <div className="cat">
+    {categories.map((category) => (
+      <div key={category.value} className="cat-item">
         <input
           type="checkbox"
-          checked={selectedCategories.includes("Sanat")}
-          value="Sanat"
-          id="Sanat"
+          checked={selectedCategories.includes(category.value)}
+          value={category.value}
+          id={category.value}
           onChange={handleCategoryChange}
         />
-        <label htmlFor="Sanat">Sanat</label>
+        <label htmlFor={category.value}>{category.label}</label>
       </div>
-      <div className="cat">
-        <input
-          type="checkbox"
-          checked={selectedCategories.includes("Teknoloji")}
-          value="Teknoloji"
-          id="Teknoloji"
-          onChange={handleCategoryChange}
-        />
-        <label htmlFor="Teknoloji">Teknoloji</label>
-      </div>
-      <div className="cat">
-        <input
-          type="checkbox"
-          checked={selectedCategories.includes("Gündem")}
-          value="Gündem"
-          id="Gündem"
-          onChange={handleCategoryChange}
-        />
-        <label htmlFor="Gündem">Gündem</label>
-      </div>
-      <div className="cat">
-        <input
-          type="checkbox"
-          checked={selectedCategories.includes("Spor")}
-          value="Spor"
-          id="Spor"
-          onChange={handleCategoryChange}
-        />
-        <label htmlFor="Spor">Spor</label>
-      </div>
-      <div className="cat">
-        <input
-          type="checkbox"
-          checked={selectedCategories.includes("Diğer")}
-          value="Diğer"
-          id="Diğer"
-          onChange={handleCategoryChange}
-        />
-        <label htmlFor="Diğer">Diğer</label>
-      </div>
-    </div>
+    ))}
+  </div>
+</div>
       </div>
     </div></div>
   );

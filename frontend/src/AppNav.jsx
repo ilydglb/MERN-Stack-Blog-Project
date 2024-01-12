@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
+
 import ThemeSwitch from './ThemeSwitch';
 import useTheme from './hooks/useTheme';
 import { TfiWrite } from 'react-icons/tfi';
@@ -35,7 +36,7 @@ function AppNav() {
       
       const response = await axios.post('/api/users/logout',{withCredentials: true});
       setAuth(null);
-      navigate('/login');  toast.success('Logged out successfully');
+      navigate('/login');  toast.success('Çıkış yapıldı.');
   }catch(error)
 { 
   console.log('failed:', error.message);
@@ -57,8 +58,9 @@ function AppNav() {
         <Navbar.Toggle />
         <Nav className="me-auto">
           <Nav.Link href="/">Ana Sayfa</Nav.Link>
-          {auth ? (<Nav.Link href="#profile">Kullanıcılar</Nav.Link> ):(<Nav.Link href="/login">Giriş Yapın</Nav.Link>)}
-          {auth ? (<Nav.Link href="#pricing">Konuşma Odaları</Nav.Link>):(<Nav.Link href="/register">Kayıt Olun</Nav.Link>)}
+          {auth ? (<Nav.Link href="/my-profile">Profilim</Nav.Link>):(<Nav.Link href="/register">Kayıt Olun</Nav.Link>)}
+          {auth ? (<></>):(<Nav.Link href="/login">Giriş Yapın</Nav.Link>)}
+          {auth?.role=='admin' ? (<Nav.Link href="/admin-page">Admin Paneli</Nav.Link>): <></>}
         </Nav>
         <Navbar.Collapse className="justify-content-end">
           <Navbar.Text>

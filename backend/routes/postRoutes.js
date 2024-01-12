@@ -9,6 +9,7 @@ router.get('', showPosts).get('/:id', showSinglePost);
 
 router.delete('/:id', verifyJWT, isOwnerOrAdmin , deletePost).put('/:id',verifyJWT,isOwnerOrAdmin, updatePost);
 
+
 //router.delete('/:id', verifyJWT, deletePost).put('/:id',verifyJWT updatePost);
 
 //(req) =>(req) ? isOwner:isAdmin

@@ -4,7 +4,7 @@ const generateToken = (res, userId) => {
   const accessToken = jwt.sign(
     { userId },
     process.env.JWT_SECRET,
-    { expiresIn: '1d'} //10m
+    { expiresIn: '30s'} 
     );
 
     const refreshToken = jwt.sign(
@@ -13,17 +13,9 @@ const generateToken = (res, userId) => {
       { expiresIn: '15d'}
       );
   
-
-  // res.cookie('jwjt', refreshToken, {
-  //   httpOnly: true,
-  //   secure: process.env.NODE_ENV !== 'development', // Use secure cookies in production
-  //   sameSite: 'None', //strict for Prevent CSRF attacks
-  // //  maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
-  // });
-
   res.cookie('jwt', refreshToken, { httpOnly: true });
- //   res.status(200).json({message:'Cookie sent!'});
- return accessToken //res.json(accessToken)
+
+ return accessToken;
 };
 
 export default generateToken;  

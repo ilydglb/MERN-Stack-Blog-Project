@@ -10,6 +10,7 @@ const RequireAuth = () => {
   React.useEffect(() => {
     if (!auth) {
       navigate("/login", { state: { from: location }, replace: true });
+      //console.log("cickus",auth.role)
     }
   }, [auth, location, navigate]);
 

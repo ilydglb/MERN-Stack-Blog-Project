@@ -122,7 +122,7 @@ const updatePost = async (req, res, next) => {
         post.content = req.body.content || post.content;
         post.categories = req.body.categories || post.categories;
         post.image= req.body.image || post.image;
-        
+
         const updatedPost = await post.save();
   
         res.json({
@@ -134,6 +134,8 @@ const updatePost = async (req, res, next) => {
       next(error);
     }
   };
+
+
   
 
 //   exports.addComment = async (req, res, next) => {

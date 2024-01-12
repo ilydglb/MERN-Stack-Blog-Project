@@ -7,17 +7,16 @@ import MyPosts from "./MyPosts.jsx";
 
 function TabMenu() {
   return (
+    
     <Tabs
       defaultActiveKey="profile"
       id="uncontrolled-tab-example"
-      className="mb-3"
+
     >
       <Tab eventKey="profile" title="Profili Güncelle">
         <UpdateProfile />
       </Tab>
-      <Tab eventKey="likes" title="Beğendiklerim">
-        Tab content for Profile
-      </Tab>
+     
       <Tab eventKey="sharings" title="Paylaşımlarım">
         <MyPosts/>
       </Tab>
@@ -25,6 +24,7 @@ function TabMenu() {
         <DeleteAc />
       </Tab>
     </Tabs>
+    
   );
 }
 

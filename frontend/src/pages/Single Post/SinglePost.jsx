@@ -1,34 +1,29 @@
 import { Link } from "react-router-dom";
 import "./singlePost.scss";
-import { useLocation } from "react-router-dom";
+import { useLocation,Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from 'axios';
 import DOMPurify from "dompurify";
+import { toast } from 'react-toastify';
 import Button from 'react-bootstrap/Button';
 import { MdDeleteOutline } from "react-icons/md";
 import { FaRegEdit } from "react-icons/fa";
 import useAuth from "../../hooks/useAuth";
 import Modal from 'react-bootstrap/Modal';
 import { useNavigate } from 'react-router-dom';
+import useRefreshToken from "../../hooks/useRefreshToken";
 
 export default function SinglePost() {
   const location = useLocation();
+ const navigate = useNavigate();
 
   const { postId = null, postInfo = null } = location.state || {};
-  //const { postId } = location.state;
  const [post,setPost]=useState()
  const PF="http://localhost:5000/images/";
- const {auth} = useAuth();
  const [showModal, setShowModal] = useState(false);
- const navigate =useNavigate()
- const headers = {
-  Authorization: `Bearer ${auth?.accessToken}`, 
-};
 
-
- useEffect(() => {
-  console.log('POSTUM ', post);
-}, [post]);
+ const { auth, setAuth } = useAuth();
+ const refresh= useRefreshToken();
 
   useEffect(() => {
     console.log('ID ',postId)
@@ -44,21 +39,23 @@ export default function SinglePost() {
     fetchPost();
     
   }, []);
-  const getText = (html) =>{
-    const doc = new DOMParser().parseFromString(html, "text/html")
-    return doc.body.textContent
-  }
+
 
   const handleDelete = (e) => {
     e.preventDefault()
      const deletePost = async() =>{
     try {
-        const response = await axios.delete(`/api/posts/${post._id}` ,{headers});
-       
+      const newAccessToken = await refresh();
+    
+        const response = await axios.delete(`/api/posts/${post._id}` ,{ headers: {
+          Authorization: `Bearer ${newAccessToken}`,
+      }});
+      await toast.success('Başarıyla silindi.');
       } catch (error) {
         console.error(error);
+        await toast.error('Başarısız.');
       }
-      //await toast.success('Başarıyla silindi.');
+    
       navigate('/'); 
     };
     deletePost();
@@ -66,7 +63,11 @@ export default function SinglePost() {
     setShowModal(false);
   };
 
+  const handleNavigation = () => {
+    let username=post.postedBy;
+    navigate(`/posts/${post.postedBy}`,{ state: { username }})
   
+  };
 
   return (
     post ? (
@@ -98,9 +99,9 @@ export default function SinglePost() {
               <span>
                 Yazan:
                 <b className="singlePostAuthor">
-                  <Link to="/posts?username=Safak" className='route'>
+                  <button onClick={handleNavigation} className='route'>
                     {post.postedBy}
-                  </Link>
+                  </button>
                 </b>
               </span>
               <span>{new Date(post.createdAt).toLocaleString()}</span>

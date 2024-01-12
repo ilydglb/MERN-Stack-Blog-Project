@@ -4,7 +4,7 @@
   
 } 
 
-             /*                 body{
+                          body{
                                 background: linear-gradient(
                                   rgba(255, 255, 255, 0.3),
                                   rgba(255, 255, 255, 0.5)
@@ -13,7 +13,7 @@
                                 background-size: cover;
                                 background-position: center;
                               background-repeat: no-repeat;
-                              height: 100vh;
+                              height: 150vh;
                               .dark{
 
                                   background: linear-gradient(
@@ -24,10 +24,10 @@
                                   background-size: cover;
                                   background-position: center;
                                   background-repeat: no-repeat;
-                              height: 100vh;
+                              height: 150vh;
                               }
  
-}*/
+}
 
 
 .app,.app2{
@@ -160,7 +160,8 @@
 }
 
 .route{color:rgb(120, 158, 155) ;
-font-weight: bold;}
+font-weight: bold;
+border: none; background: transparent;}
 
 
 
@@ -185,15 +186,20 @@ font-weight: bold;}
 .category-container {
   
   margin-left: 2%;
-  .selected{
-    background-color: #607d7b;
-  }
-  .btn{margin-right: 3%; margin-bottom: 3%;}
-  .trend{
-    margin-top: 55%;
-  }
+  // .selected{
+  //   background-color: #607d7b;
+  // }
+  // .btn{margin-right: 3%; margin-bottom: 3%;}
+  
   h1,h2{
     color: #555;
+  }
+
+
+  .cat {
+    font-size: 20px; 
+    margin-left: 1%;
+    color: #576c6b;
   }
 }
 
@@ -211,7 +217,7 @@ font-weight: bold;}
   border-radius: 2%;
   padding: 10px;
   font-size: 14px;
-  // min-height: 410px;
+   min-height: 450px;
   // display: flex;  flex-direction: column;
   // align-items: center;
   // justify-content: center;
@@ -343,9 +349,7 @@ font-weight: bold;}
       }
 
       .cat{
-        display: flex;
-        align-items: center;
-       // gap: 2px;
+   
         color: #607d7b;
         
         label{
@@ -355,6 +359,8 @@ font-weight: bold;}
     }
   }
 }
+
+
 
 .write{
   height: 110vh;
@@ -393,7 +399,7 @@ font-weight: bold;}
 
 @media only screen and (min-width: 769px)  {
   .app2 {
-    height: 180vh; 
+    height: 190vh; 
   }
   .app {
     height: 100vh;
@@ -401,15 +407,9 @@ font-weight: bold;}
 }
 
 .card-image {
-  width: 100%; /* Make the image take 100% of its container width */
-  height: 200px; /* Set a fixed height or use another unit like percentage, em, etc. */
-  object-fit: cover; /* Maintain aspect ratio and cover the entire container */
+  width: 100%; 
+  height: 200px; 
+  object-fit: cover; 
 }
 
-.profile-container{
- 
- 
-  margin-top: -10%;
-
-
-}
+.dt-header{justify-content: space-between;}

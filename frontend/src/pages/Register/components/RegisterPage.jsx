@@ -29,10 +29,10 @@ const RegisterPage = () => {
       id: 1,
       name: "username",
       type: "text",
-      placeholder: "Username",
+      placeholder: "Kullanıcı adı",
       errorMessage:
-        "Username should be 3-16 characters and shouldn't include any special character!",
-      label: "Username",
+        "Kullanıcı adı 3-16 karakterden oluşmalı ve herhangi bir özel karakter içermemelidir!",
+      label: "Kullanıcı adı",
       pattern: "^[A-Za-z0-9]{3,16}$",
       required: true,
     },
@@ -41,7 +41,7 @@ const RegisterPage = () => {
       name: "email",
       type: "email",
       placeholder: "Email",
-      errorMessage: "It should be a valid email address!",
+      errorMessage: "Geçerli bir email adresi girin!",
       label: "Email",
       required: true,
     },
@@ -50,20 +50,20 @@ const RegisterPage = () => {
       id: 3,
       name: "password",
       type: "password",
-      placeholder: "Password",
+      placeholder: "Şifre",
       errorMessage:
-        "Password should be 8-20 characters and include at least 1 letter, 1 number and 1 special character!",
-      label: "Password",
-      pattern: "^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,20}$",
+        "Şifre 8-20 karakterden oluşmalı ve en az 1 harf, 1 rakam ve 1 özel karakter içermelidir!",
+      label: "Şifre",
+      pattern: `^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[.!@#$%^&*])[a-zA-Z0-9.!@#$%^&*]{8,20}$`,
       required: true,
     }, 
     {
       id: 4,
       name: "confirmPassword",
       type: "password",
-      placeholder: "Confirm Password",
-      errorMessage: "Passwords don't match!",
-      label: "Confirm Password",
+      placeholder: "Şifre Doğrulama",
+      errorMessage: "Şifreler eşleşmiyor!",
+      label: "Şifre Doğrulama",
       pattern: values.password,
       required: true,
     },
@@ -110,7 +110,7 @@ const validateForm = () => {
        
       }
     }
-    else{toast.error('Please check validations.');}
+    else{toast.error('Lütfen doğrulamaları kontrol ediniz.')}
   };
   
 
@@ -127,7 +127,7 @@ const validateForm = () => {
   <div className="app">
     <div className="formcontainer">
       <form>
-        <h1>Register</h1>
+        <h1>Kayıt Ol</h1>
         {inputs.map((input) => (
         
         <FormInput
@@ -141,7 +141,7 @@ const validateForm = () => {
        
       </form>
         <div className="form-button-container">
-          <Button className="btn" variant="outline-light"onClick={handleSubmit}>Submit</Button>{' '}
+          <Button className="btn" variant="outline-light"onClick={handleSubmit}>Kayıt Ol</Button>{' '}
         </div>
         <span className="line">
           Hesabınız var mı? <Link to="/login" className="route">Giriş yapın.</Link>

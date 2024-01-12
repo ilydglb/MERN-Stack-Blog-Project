@@ -6,8 +6,9 @@ import Button from 'react-bootstrap/Button';
 import { toast } from 'react-toastify';
 
 import useAuth from "../../hooks/useAuth";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
+import AdminPage from "../Admin/AdminPage";
 
 
 function LoginPage() {
@@ -36,18 +37,14 @@ function LoginPage() {
             id: 2,
             name: "password",
             type: "password",
-            placeholder: "Password",
-            label: "Password",
+            placeholder: "Şifre",
+            label: "Şifre",
             required: true,
         },
 
     ];
-
-    useEffect(() => {
-        // Log the auth.accessToken when the auth state changes
-        console.log("AUTH STATE", auth);
-        //console.log("AUTH TOKEN", auth.accessToken);
-    }, [auth]);
+    const location = useLocation();
+ 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -59,17 +56,26 @@ function LoginPage() {
              const role =  response.data.role;
              const username= response.data.username
             // const userId= response.data.userId
-             const email=values.email
+             const email=response.data.email;
              const profilePic = response.data.profilePic
 
-            setAuth({ username, role, email, profilePic, accessToken });
+           await setAuth({ username, role, email, profilePic, accessToken });
             
              console.log(accessToken)
              console.log(response.data.accessToken)
              console.log(response.data.accessToken)
-             //console.log("COOKIE",response.data.cookies.jwt)
-            // console.log(auth)
-             if(accessToken){navigate('/');}
+         
+             console.log("PRINT AUTH",auth)
+
+             if(accessToken){
+              //  navigate('/');
+             // const from = navigate.location.state?.from || '/';
+             
+             //if(auth?.role=='admin'){navigate('/admin-page', { replace: true });}
+              const from = location.state?.from?.pathname || "/";
+            
+            navigate(from, { replace: true });
+            }
              
              //console.log("AUTH",auth)
         } catch (error) {
@@ -99,7 +105,7 @@ function LoginPage() {
     
             <div className="app formcontainer custom ">
                 <form>
-                    <h1>Log In</h1>
+                    <h1>Giriş Yap</h1>
                     {inputs.map((input) => (
 
                         <FormInput
@@ -111,7 +117,7 @@ function LoginPage() {
 
                     ))}
                     <div className="form-button-container">
-                        <Button className="login-btn" variant="outline-light" onClick={handleSubmit}>Log in</Button>{' '}
+                        <Button className="login-btn" variant="outline-light" onClick={handleSubmit}>Giriş</Button>{' '}
                     </div>
                     <span className="line">
           Hesabınız yok mu? <Link to="/register" className="route">Kayıt olun.</Link>

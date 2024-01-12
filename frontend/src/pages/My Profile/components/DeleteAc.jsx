@@ -1,35 +1,42 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import useAuth from '../../../hooks/useAuth';
+import useRefreshToken from '../../../hooks/useRefreshToken';
 
 function DeleteAc() {
   const [showModal, setShowModal] = useState(false);
-  const navigate =useNavigate()
-  const {setAuth} =useAuth()
+  const navigate =useNavigate();
+  const { auth, setAuth } = useAuth();
+  const refresh= useRefreshToken();
+
 
   const handleDelete = (e) => {
     e.preventDefault()
-     const deleteUser = async() =>{
-    try {
-        const response = await axios.delete(`/api/users/profile`);
-       
-      } catch (error) {
-        console.error(error);
-      }
-      setAuth(null);
-      navigate('/home'); 
-    };
-    deleteUser();
 
-    setShowModal(false);
+    const deleteUser = async() =>{
+      try {
+        const newAccessToken = await refresh();
+          const response = await axios.delete(`/api/users/${auth.username}`,{ headers: {
+            Authorization: `Bearer ${newAccessToken}`,
+        }});
+        
+        } catch (error) {
+          console.error(error);
+        }
+        setAuth(null);
+        navigate('/'); 
+      };
+      deleteUser();
+
+      setShowModal(false);
   };
 
   return (
     <div>
-      <Button variant="danger" onClick={() => setShowModal(true)}>
+      <Button variant="danger" className='mt-3' onClick={() => setShowModal(true)}>
         Hesabı sil
       </Button>
 

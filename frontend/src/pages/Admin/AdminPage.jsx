@@ -1,11 +1,14 @@
-import React from 'react'
 
-function AdminPage() {
+
+import  TabMenu  from "./components/TabMenu.jsx";
+
+export default function AdminPage() {
   return (
-    <div>
-      <h1>Admin Page</h1>
+    <div className=" container"style={{ height: "140vh"} } >
+   <div >
+<TabMenu/>
+    
     </div>
-  )
+    </div>
+  );
 }
-
-export default AdminPage

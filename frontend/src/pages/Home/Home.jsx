@@ -2,22 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { Card } from 'primereact/card';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
-import { Paginator } from 'primereact/paginator';
-import axios from 'axios';
-
 import Button from 'react-bootstrap/Button';
-import useTheme from '../../hooks/useTheme';
-import { IoSearch } from "react-icons/io5";
-
 import { InputText } from 'primereact/inputtext';
-
-import { Dropdown } from 'primereact/dropdown';
-
+import { Dropdown } from 'primereact/dropdown'
 import { Tag } from 'primereact/tag';
- 
+import { Paginator } from 'primereact/paginator';
+import { IoSearch } from "react-icons/io5";
+import axios from 'axios';
+import useTheme from '../../hooks/useTheme';
 import { useNavigate } from 'react-router-dom';
 import DOMPurify from "dompurify";
 import { formatDistanceToNow } from 'date-fns';
+
 const Home = () => {
   const [posts, setPosts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -26,35 +22,65 @@ const Home = () => {
   const navigate=useNavigate()
   const { theme } = useTheme();
   const [filteredPosts, setFilteredPosts] = useState([]);
+  const [searchValue, setSearchValue] = useState(null);
+
   const [globalFilter, setGlobalFilter] = useState('');
   const [currentCats, setCurrentCats] = useState('');
 
   const PF="http://localhost:5000/images/";
   
- 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         const response = await axios.get(`/api/posts`);
         const sortedPosts = response.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         setPosts(sortedPosts);
-        //setPosts(response.data);
+        setFilteredPosts(sortedPosts);
+
       } catch (error) {
         console.error(error);
       }
+
     };
 
     fetchPosts();
   }, []);
 
+ 
+
+  const filterPosts = (searchValue) => {
+    const filtered = posts.filter((post) => {
+      // Check if searchValue is in any category
+      const categoryMatch = post.categories.some((category) =>
+        category.toLowerCase().includes(searchValue.toLowerCase())
+      );
+      const textMatch =
+        post.postedBy.toLowerCase().includes(searchValue.toLowerCase()) ||
+        post.title.toLowerCase().includes(searchValue.toLowerCase());
+  
+      // Return true if either categoryMatch or textMatch is true
+      return categoryMatch || textMatch;
+    });
+  
+    setFilteredPosts(filtered);
+  };
+  
+  const onFilterChangeForSearch = (event) => {
+    setSearchValue(event.target.value);
+    filterPosts (event.target.value);
+  };
+
+
   const handleCardClick =(postId)=> {
-    console.log("pip",postId)
     navigate(`/post/${postId}`,{ state: { postId }});
   }
 
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
+  let currentPosts = filteredPosts.slice(indexOfFirstPost, indexOfLastPost);
+  useEffect(() => {
+    currentPosts = filteredPosts.slice(indexOfFirstPost, indexOfLastPost);
+  }, [filteredPosts]);
 
   const itemTemplate = (post) => {
     const distanceToNow = formatDistanceToNow(new Date(post.createdAt), { addSuffix: true });
@@ -96,46 +122,42 @@ const Home = () => {
   const onPageChange = (event) => {
     setCurrentPage(event.page + 1);
   };
-  const handleF = (e) => {
-    e.preventDefault()
-    console.log("sdohfnodsnf")
-  };
+
+
+
+
+
 
   return (
    < div className='app2'>
     <div className="main-container col-11">
 
-<div className='col-9'>
+<div className='col-10 container'>
       <div className="list-grid ">{ }</div>
       <div className="p-grid mb-4">
         <div className="">
           <div className="p-inputgroup">
             <InputText
-              placeholder="Ara"
-          
-              value={''}
+              placeholder="Yazar, kategori, post ara"
+              onChange={onFilterChangeForSearch}
+               value={searchValue}
               style={{
-                borderRadius: "0%",}}
+                borderRadius: "0%"}}
             />
           <Button variant= 'outline-light 'style={{backgroundColor:'#465c5a'}} 
-            onClick={() => { handleF()}} >
+            onClick={(e) => { e.preventDefault()}} >
               <IoSearch 
                         className=''style={{ height: "100%", fontSize: 20,}}/> 
           </Button>
           </div>
         </div>
         <div>
-          <Dropdown
-            value={``}
-            options={''}
-            className='mt-3'
-            placeholder="Sort"
-          />
+     
         </div>
       </div>
       </div>
 <div className='flex'>
-      <div className="dataview-container col-9">
+      <div className="dataview-container container col-10">
         <Row>
           {currentPosts.map((post, index) => (
             <Col key={index} md={4} >
@@ -151,33 +173,7 @@ const Home = () => {
           className='paginator'
         />
       </div>
-      <div className="category-container col-3">
-     
-        <div>
-          <h2 className='mb-3'>Kategoriler</h2>
-            <Button className={btnstate == 1 ? "selected" : " "} onClick={()=>{if(btnstate==0)setBtnState(1);
-            else 
-            setBtnState(0)}} variant="outline-light" >
-              Sanat
-            </Button>
-            <Button className="btn" variant="outline-light">
-              Teknoloji
-            </Button>
-            <Button className="btn" variant="outline-light">
-              Gündem
-            </Button>
-            <Button className="btn" variant="outline-light">
-              Spor
-            </Button>
-            <Button className="btn" variant="outline-light">
-              Hepsi
-            </Button>
-        </div>
-        <div className='trend'><h2>Trend</h2></div>
-      </div>
-      <div> 
-       
-      </div>
+  
       </div>
     </div>
     </div>

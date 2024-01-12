@@ -73,7 +73,7 @@ const authUser = asyncHandler(async (req, res) => {
 
   } else {
     res.status(401);
-    throw new Error('Invalid email or password');
+    throw new Error('Geçersiz email ya da şifre.');
   }
 }); //login
   
@@ -93,8 +93,16 @@ const logoutUser = asyncHandler(async(req, res) => {
   res.status(200).json({ message: 'Logged out successfully' })  //204-successful and no content to display
 })
 
-
-
+const getUsers = asyncHandler(async(req, res) => {
+ 
+  try {
+    const  users = await User.find();
+    
+    res.status(200).json(users);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
 
 // @access  Private
 const getUserProfile = asyncHandler(async(req, res) => {
@@ -125,10 +133,8 @@ const updateUserProfile = asyncHandler(async (req, res) => {
     user.username = req.body.username || user.username;
     user.email = req.body.email || user.email;
     user.profilePic = req.body.profilePic || user.profilePic;
+    user.password = req.body.password || user.password;
 
-    if (req.body.password) {
-      user.password = req.body.password;
-    }
 
     const updatedUser = await user.save();
 
@@ -153,14 +159,14 @@ const updateUserProfile = asyncHandler(async (req, res) => {
 import Post from '../models/postModel.js';
 const deleteUser = asyncHandler(async(req,res)=>{
  
-  const username = req.user.username;
-  const userId=req.user._id;
+  const username = req.params.username;
+  //const userId=req.user._id;
 
   //delete user's posts
   await Post.deleteMany({ postedBy: username });
 
   // Then delete the user
-  const user = await User.findById(userId);
+  const user = await User.findOne({ username });;
 
   if (user) {
     await user.deleteOne();
@@ -176,4 +182,5 @@ export { authUser,
     logoutUser,
     getUserProfile,
     updateUserProfile,
-  deleteUser};
+  deleteUser,
+  getUsers};

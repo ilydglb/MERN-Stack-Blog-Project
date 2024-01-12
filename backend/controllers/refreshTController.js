@@ -16,7 +16,7 @@ if(refreshToken){
         const accessToken = jwt.sign(
             { "userId": decoded.userId },
             process.env.JWT_SECRET,
-            { expiresIn: '15m' }
+            { expiresIn: '30s' }
         );
         res.status(200).json({ accessToken:accessToken, })
     }catch(err){

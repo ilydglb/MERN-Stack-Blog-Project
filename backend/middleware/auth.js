@@ -16,8 +16,8 @@ let user;
         try{  req.user = await User.findById(decoded.userId).select('-password')}catch(err){console.log(err)}
         //console.log(decoded.userId)
     if (err) {
-      console.error(err); // Log the error for debugging
-      return res.status(403).json({ error: 'Forbidden: Invalid Token' });
+      console.error(err); 
+      return res.json({ error: 'Forbidden: Invalid Token',expired:'true' });
     }
 
 
@@ -39,15 +39,31 @@ next();
 }
 const isAdmin = async (req,res,next)=>{
 
-  const post = await Post.findById(req.params.id)
-  // console.log("postedby id: ", post.postedBy)  //postun idsi
-  // console.log("req userid: ",req.user.username)
-
   if ( req.user.role !== 'admin') {
     return res.status(403).json({ error: 'You must be the admin' });
 }
 next(); 
 }
+
+const isTheUserOrAdmin = async (req, res, next) => {
+  try {
+    const username = req.params.username;
+    const user = await User.findOne({ username });;
+
+    // Check if the user is the owner or an admin
+    if (req.user.username !== user.username && req.user.role !== 'admin') {
+      return res.status(403).json({ error: 'You must be the user or an admin' });
+    }
+
+    // If the user is the owner or an admin, proceed to the next middleware or route handler
+    next();
+  } catch (error) {
+    // Handle any errors that may occur during the Post.findById() operation
+    console.error(error);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
 const isOwnerOrAdmin = async (req, res, next) => {
   try {
     const post = await Post.findById(req.params.id);
@@ -66,4 +82,4 @@ const isOwnerOrAdmin = async (req, res, next) => {
   }
 };
 
-export {verifyJWT, isOwnerOrAdmin};
+export {verifyJWT, isOwnerOrAdmin, isTheUserOrAdmin};
