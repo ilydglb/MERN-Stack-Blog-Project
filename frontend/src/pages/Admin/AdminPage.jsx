@@ -1,5 +1,3 @@
-
-
 import  TabMenu  from "./components/TabMenu.jsx";
 
 export default function AdminPage() {

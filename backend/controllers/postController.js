@@ -67,7 +67,7 @@ const showPosts = async (req, res) => {
 
 const showSinglePost = async (req, res, next) => {
     try {
-        const post = await Post.findById(req.params.id).populate('comments.postedBy', 'name');
+        const post = await Post.findById(req.params.id);
         res.status(200).json({
             post
         })

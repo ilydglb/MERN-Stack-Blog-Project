@@ -55,7 +55,6 @@ function LoginPage() {
              const accessToken =  response.data.accessToken;
              const role =  response.data.role;
              const username= response.data.username
-            // const userId= response.data.userId
              const email=response.data.email;
              const profilePic = response.data.profilePic
 
@@ -65,19 +64,15 @@ function LoginPage() {
              console.log(response.data.accessToken)
              console.log(response.data.accessToken)
          
-             console.log("PRINT AUTH",auth)
+             //console.log("PRINT AUTH",auth)
 
              if(accessToken){
-              //  navigate('/');
-             // const from = navigate.location.state?.from || '/';
-             
-             //if(auth?.role=='admin'){navigate('/admin-page', { replace: true });}
-              const from = location.state?.from?.pathname || "/";
+
+            const from = location.state?.from?.pathname || "/";
             
             navigate(from, { replace: true });
             }
-             
-             //console.log("AUTH",auth)
+            
         } catch (error) {
 
              toast.error(error.response.data.message);

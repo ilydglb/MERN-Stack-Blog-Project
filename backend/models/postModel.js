@@ -25,17 +25,17 @@ const postSchema = mongoose.Schema(
             type: String,
             default: "",
         },
-        likes: [{ type: mongoose.Types.ObjectId, ref: "User" }],
-        comments: [
-            {
-                text: String,
-                created: { type: Date, default: Date.now },
-                postedBy: {
-                    type: mongoose.Types.ObjectId,
-                    ref: "User",
-                },
-            },
-        ],
+        // likes: [{ type: mongoose.Types.ObjectId, ref: "User" }],
+        // comments: [
+        //     {
+        //         text: String,
+        //         created: { type: Date, default: Date.now },
+        //         postedBy: {
+        //             type: mongoose.Types.ObjectId,
+        //             ref: "User",
+        //         },
+        //     },
+        // ],
     },
     { timestamps: true }
 );

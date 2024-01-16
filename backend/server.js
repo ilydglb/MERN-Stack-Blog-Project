@@ -2,8 +2,6 @@ import express from 'express';
 import dotenv from 'dotenv';
 dotenv.config();
 import connectDB from './config/db.js';
-import helmet from 'helmet';
-import session from 'express-session';
 import cors from 'cors'
 
 import { notFound, errorHandler } from './middleware/errorMiddleware.js';
