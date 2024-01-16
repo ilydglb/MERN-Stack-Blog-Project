@@ -1,5 +1,5 @@
 import { useState } from "react";
-//import { FiEye,FiEyeOff } from "react-icons/fi";
+import { FiEye,FiEyeOff } from "react-icons/fi";
 
 const FormInput = (props) => {
   const [focused, setFocused] = useState(false);
@@ -23,12 +23,12 @@ const FormInput = (props) => {
         focused={focused.toString()}
       />
 
-{/* {id === 13 && (
+{id === 13 && (
           <div className='col-2 icon'>
             <button><FiEye/></button>      
           </div>
         )}
-               <span>{errorMessage}</span> */}
+               <span>{errorMessage}</span>
        
     </div>
   );

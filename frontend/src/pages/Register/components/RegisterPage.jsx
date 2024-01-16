@@ -22,8 +22,6 @@ const RegisterPage = () => {
   });
 
 
-
-  // Form input configurations
   const inputs = [
     {
       id: 1,

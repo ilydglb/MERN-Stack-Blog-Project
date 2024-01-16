@@ -66,7 +66,11 @@ export default function SinglePost() {
     setShowModal(false);
   };
 
+  const handleNavigation = () => {
+    let username=post.postedBy;
+    navigate(`/posts/${post.postedBy}`,{ state: { username }})
   
+  };
 
   return (
     post ? (
@@ -98,9 +102,9 @@ export default function SinglePost() {
               <span>
                 Yazan:
                 <b className="singlePostAuthor">
-                  <Link to="/posts?username=Safak" className='route'>
+                <button onClick={handleNavigation} className='route'>
                     {post.postedBy}
-                  </Link>
+                  </button>
                 </b>
               </span>
               <span>{new Date(post.createdAt).toLocaleString()}</span>

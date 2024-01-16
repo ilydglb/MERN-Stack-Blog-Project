@@ -13,7 +13,6 @@ import { FaFeatherAlt } from 'react-icons/fa';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import useAuth from './hooks/useAuth';
-import LoginPage from './pages/Login/LoginPage';
 
 
 function AppNav() {

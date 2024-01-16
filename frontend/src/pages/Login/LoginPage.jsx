@@ -64,7 +64,7 @@ function LoginPage() {
              console.log(response.data.accessToken)
              console.log(response.data.accessToken)
          
-             //console.log("PRINT AUTH",auth)
+            
 
              if(accessToken){
 

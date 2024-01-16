@@ -9,13 +9,4 @@ router.get('', showPosts).get('/:id', showSinglePost);
 
 router.delete('/:id', verifyJWT, isOwnerOrAdmin , deletePost).put('/:id',verifyJWT,isOwnerOrAdmin, updatePost);
 
-
-//router.delete('/:id', verifyJWT, deletePost).put('/:id',verifyJWT updatePost);
-
-//(req) =>(req) ? isOwner:isAdmin
-// router.put('/comment/post/:id', isAuthenticated, addComment);
-// router.put('/addlike/post/:id', isAuthenticated, addLike);
-// router.put('/removelike/post/:id', isAuthenticated, removeLike);
-
-
 export default router;

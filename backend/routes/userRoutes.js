@@ -22,10 +22,8 @@ router.route('/profile')
   .get(verifyJWT, getUserProfile)
   .put(verifyJWT, updateUserProfile)
 
-  router.get('/', verifyJWT, getUsers); 
-  
-router.delete('/:username',verifyJWT, isTheUserOrAdmin, deleteUser);
+router.get('/', verifyJWT, getUsers);
 
-
+router.delete('/:username', verifyJWT, isTheUserOrAdmin, deleteUser);
 
 export default router;
